@@ -1,47 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import YTAPI from './apis/youtube';
 import SearchBar from './SearchBar';
 import VideoList from './VideoList';
 import VideoDetails from './VideoDetails';
 
-class App extends React.Component {
-  state = { videos: [], selectedVideo: null };
-  onTermSubmit = async (term) => {
+const App = () => {
+  const [videos, setVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const onTermSubmit = async (term) => {
     const response = await YTAPI.get('/search', {
       params: {
         q: term,
       },
     });
 
-    this.setState({
-      videos: response.data.items,
-      selectedVideo: response.data.items[0],
-    });
+    setVideos(response.data.items);
+    setSelectedVideo(response.data.items[0]);
   };
 
-  onVideoSelect = (video) => {
-    this.setState({ selectedVideo: video });
-  };
-  render() {
-    return (
-      <div className='ui container'>
-        <SearchBar onTermSubmit={this.onTermSubmit} />
-        <div className='ui grid'>
-          <div className='ui row'>
-            <div className='eleven wide column'>
-              <VideoDetails video={this.state.selectedVideo} />
-            </div>
-            <div className='five width column'>
-              <VideoList
-                videos={this.state.videos}
-                onVideoSelect={this.onVideoSelect}
-              />
-            </div>
+  return (
+    <div className='ui container'>
+      <SearchBar onTermSubmit={onTermSubmit} />
+      <div className='ui grid'>
+        <div className='ui row'>
+          <div className='eleven wide column'>
+            <VideoDetails video={selectedVideo} />
+          </div>
+          <div className='five width column'>
+            <VideoList videos={videos} onVideoSelect={setSelectedVideo} />
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default App;
