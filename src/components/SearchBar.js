@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // AIzaSyC9QVBcLijogVwREev3DL5CXjZU16odAes
 const SearchBar = ({ onTermSubmit }) => {
-  const [term, setTerm] = useState('javascript');
-
-  useEffect(() => {
-    onTermSubmit(term);
-  }, []);
+  const [term, setTerm] = useState('');
 
   const onChange = (e) => {
     setTerm(e.target.value);
